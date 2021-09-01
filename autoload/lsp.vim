@@ -608,7 +608,11 @@ function! s:ensure_init(buf, server_name, cb) abort
     \ }
 
     if has_key(l:server_info, 'initialization_options')
-        let l:request.params['initializationOptions'] = l:server_info['initialization_options']
+        if type(l:server_info['initialization_options']) == v:t_func
+            let l:request.params['initializationOptions'] = l:server_info['initialization_options'](l:server_info)
+        else
+            let l:request.params['initializationOptions'] = l:server_info['initialization_options']
+        endif
     endif
 
     let l:server['init_callbacks'] = [a:cb]
